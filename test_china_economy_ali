@@ -1,0 +1,73 @@
+import time
+
+import scrapy
+
+
+class SinaSpider(scrapy.Spider):
+    name = "china_economy_alibaba"
+    allowed_domains = ["so.com"]
+    host = "https://www.so.com"
+    start_urls = [
+        "https://www.so.com/s?q=1&src=srp&fr=zz_www_ce_cn&psid=3c73b7740302852f575f83ef4eae9efb&rg=1&site=ce.cn&inurl="
+    ]
+
+    def parse(self, response):
+        items = response.xpath('//ul[@class="result"]//li')
+        print("number of news =", len(items))
+
+        for each_item in items:
+            link = each_item.xpath('./h3/a/@href').extract_first()
+            if link:
+                # print("now_link=", link)
+                yield scrapy.Request(link, callback=self.parse_news)
+        next_page = response.xpath('//a[@id="snext"]/@href').extract_first()
+        print("next page =========== ", next_page)
+        yield scrapy.Request(self.host+next_page, callback=self.parse)
+
+    def parse_news(self, response):
+        print("yes oooo")
+        # source = "sina-finance"
+        # external_ref = response.url
+        # title = response.xpath('//h1[@class]/text()').extract_first()
+        # author_name = response.xpath('//meta[@property="author"]/@content').extract_first()
+        # timestr = response.xpath('//span[@class="date"]/text()').extract_first()
+        # timestr = '点'.join(timestr.split(':')) if timestr else 'Unknown time'
+        # print(timestr)
+        # timestamp = '11028013'
+        # news_body = response.xpath('//div[@class="article"]/p/text()').extract()
+        # raw_content = ""
+        # for news_para in news_body:
+        #     # clenansed_news_para = cleanse_seeking_alpha_news_content(news_para)
+        #     # raw_content += clenansed_news_para
+        #     raw_content += news_para
+        #
+        # filename = 'D://Data//news_ali//%s.txt' % (timestr)
+        # # print("raw_content =", raw_content)
+        # with open(filename, 'wb') as f:
+        #     f.write(raw_content.encode('utf-8'))
+        #     self.log('Saved file %s' % filename)
+
+
+        # print(title, '===', news_body)
+
+        # # raw_content = decode(raw_content)
+        # external_ref = response.url
+        # abstract = response.xpath('//article//ul//strong|//article//section/div/em').extract()
+        #
+        # author_name = response.xpath('//meta[@property="author"]/@content').extract_first()
+        # author_platform = source
+        #
+        # timestr = response.xpath('//article/section/div/div//div[@class="byline-timestamp"]/@data-timestamp').extract_first()
+        # if timestr:
+        #     timestr_ = timestr[0:10] + ' ' + timestr[11:19]
+        #     timestamp = 1000 * int(time.mktime(time.strptime(timestr_, '%Y-%m-%d %H:%M:%S')))
+        # else:
+        #     timestamp = 0
+        #
+        # news_keywords = response.xpath('//meta[@name="news_keywords"]/@content').extract_first()
+        # if news_keywords:
+        #     news_keywords = news_keywords.split(",")
+        # else:
+        #     news_keywords = []
+
+
