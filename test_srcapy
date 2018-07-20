@@ -1,0 +1,35 @@
+import requests
+import scrapy
+
+def requests_job():
+    target = 'https://finance.sina.com.cn/'
+    proxies = {"http": "http://z84106608:18HW@ZLW@172.18.10.30:8080", "https": "http://z84106608:18HW@ZLW@172.18.10.30:8080", }
+    req = requests.get(url=target, proxies=proxies)
+    print(req.text)
+
+
+class BlogSpider(scrapy.Spider):
+    name = 'sinaspider'
+    start_urls = ['https://www.baidu.com']
+    proxies = {"http": "http://z84106608:18HW@ZLW@172.18.10.30:8080",
+               "https": "http://z84106608:18HW@ZLW@172.18.10.30:8080", }
+
+    def parse(self, response):
+        a = response.xpath('//text()')
+        print(a)
+
+
+if __name__ == "__main__":
+    # print(1)
+    # requests_job()
+    timestr = "2018年05月04日19:30"
+    timestr = '点'.join(timestr.split(':'))
+    # with open("%s.txt" % timestr, 'w+') as f:
+    #     f.write("hello")
+
+    with open ("11028013.txt", encoding='utf-8', mode= 'r') as f:
+        str = f.read()
+        print(str)
+    # with open(filename, encoding='utf-8', mode= ‘r') as f:
+    # for line in f:
+    #     print(repr(line))
